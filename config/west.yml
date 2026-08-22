@@ -1,0 +1,20 @@
+# ⚠️ revision 과 build.yaml 의 board 표기는 반드시 세트로 맞춰야 합니다.
+#
+#   revision: main      →  board: nice_nano@2.0.0/nrf52840/zmk   (현재 설정)
+#   revision: v0.3.0    →  board: nice_nano_v2
+#
+# 이유: Zephyr 하드웨어 모델 v2(HWMv2) 마이그레이션은 2025-12 에 main 으로
+#       들어갔고, 마지막 정식 릴리스 v0.3.0(2025-08-01)은 그 이전입니다.
+#       v0.3.0 에 새 표기를 쓰면 "board not found" 로 빌드 자체가 실패합니다.
+
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+  projects:
+    - name: zmk
+      remote: zmkfirmware
+      revision: main
+      import: app/west.yml
+  self:
+    path: config
