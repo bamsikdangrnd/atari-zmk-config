@@ -1,0 +1,17 @@
+#include <physical_layouts.dtsi>
+
+/ {
+    atari_layout: physical_layout_0 {
+        compatible = "zmk,physical-layout";
+        display-name = "Atari Joystick";
+
+        keys  //                     w   h    x    y   rot   rx   ry
+            = <&key_physical_attrs 100 100  100    0     0    0    0>  // UP
+            , <&key_physical_attrs 100 100  100  200     0    0    0>  // DOWN
+            , <&key_physical_attrs 100 100    0  100     0    0    0>  // LEFT
+            , <&key_physical_attrs 100 100  200  100     0    0    0>  // RIGHT
+            , <&key_physical_attrs 100 100  400    0     0    0    0>  // FIRE
+            , <&key_physical_attrs 100 100  400  200     0    0    0>  // FN
+            ;
+    };
+};
