@@ -1,0 +1,46 @@
+# 진단용 빌드 매트릭스
+#
+# 목적: "USB 열거 실패"의 원인이 (A) shield 정의  (B) 로컬 빌드 환경
+#       (C) BLE 스택  (D) 클론 보드 전원 회로  중 어느 것인지
+#       한 번의 CI 실행으로 좁힌다.
+#
+# 판정표는 DIAGNOSIS.md 참고.
+
+include:
+  # ── 대조군 1 ─ ZMK 공식 shield / BLE 꺼짐
+  #    현재 실물에서 정상 동작이 확인된 기준점.
+  - board: nice_nano@2.0.0/nrf52840/zmk
+    shield: settings_reset
+
+  # ── 대조군 2 ─ ZMK 공식 shield / kscan-gpio-direct / BLE 켜짐
+  #    atari_joystick 과 구조가 같지만 100% 공식 코드.
+  #    이게 실패하면 shield 정의 문제가 아니다.
+  - board: nice_nano@2.0.0/nrf52840/zmk
+    shield: tester_pro_micro
+
+  # ── 본 펌웨어
+  - board: nice_nano@2.0.0/nrf52840/zmk
+    shield: atari_joystick
+
+  # ── 변인분리 A ─ 본 펌웨어에서 BLE만 끔 (USB HID 전용)
+  #    이것만 살아나면 BLE 스택/설정 파티션 쪽 문제.
+  - board: nice_nano@2.0.0/nrf52840/zmk
+    shield: atari_joystick
+    cmake-args: -DCONFIG_ZMK_BLE=n
+    artifact-name: atari_joystick-usbonly
+
+  # ── 변인분리 B ─ 고전압 DC/DC 비활성화
+  #    ZMK main 은 nice!nano v2 에서 HV DC/DC 를 기본 활성화한다.
+  #    클론 보드는 DCCH 인덕터가 없는 경우가 많아 전류 폭증/불안정 보고가 있음.
+  #    (zmkfirmware/zmk#2990)
+  - board: nice_nano@2.0.0/nrf52840/zmk
+    shield: atari_joystick
+    cmake-args: -DCONFIG_SOC_DCDC_NRF52X_HV=n
+    artifact-name: atari_joystick-nodcdchv
+
+  # ── 변인분리 C ─ 딥슬립 끔 + USB 로깅 켬
+  #    부팅은 하는데 곧바로 잠드는 경우를 배제.
+  - board: nice_nano@2.0.0/nrf52840/zmk
+    shield: atari_joystick
+    cmake-args: -DCONFIG_ZMK_SLEEP=n
+    artifact-name: atari_joystick-nosleep
