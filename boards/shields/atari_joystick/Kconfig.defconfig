@@ -1,0 +1,6 @@
+if SHIELD_ATARI_JOYSTICK
+
+config ZMK_KEYBOARD_NAME
+	default "Atari BT Stick"
+
+endif
