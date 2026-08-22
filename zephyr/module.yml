@@ -1,0 +1,10 @@
+# 이 파일이 없으면 ZMK CI 가 저장소 루트의 boards/ 를 인식하지 못해
+# "No shield named 'atari_joystick' found" 로 빌드가 실패합니다.
+#
+# build-user-config 워크플로는 zephyr/module.yml 이 있을 때만
+# -DZMK_EXTRA_MODULES=<저장소 루트> 를 넘겨서 board_root 를 등록합니다.
+
+name: atari-zmk-config
+build:
+  settings:
+    board_root: .
